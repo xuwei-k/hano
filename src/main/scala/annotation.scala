@@ -7,6 +7,7 @@
 package com.github.okomok
 package hano
 
+import scala.annotation.StaticAnnotation
 
 object annotation {
 

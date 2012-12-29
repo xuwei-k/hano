@@ -22,11 +22,14 @@ libraryDependencies ++= {
   ).map(_ % "test")
 }
 
-libraryDependencies <+= scalaVersion{ v =>
+libraryDependencies <++= scalaVersion{ v =>
   if(v.startsWith("2.10"))
-    "org.scalatest" %% "scalatest" % "1.9.1" % "test"
+    Seq(
+      "org.scalatest" %% "scalatest" % "1.9.1" % "test"
+     ,"org.scala-lang" % "scala-actors" % v
+    )
   else
-    "org.scalatest" %% "scalatest" % "2.0.M5" % "test"
+    Seq("org.scalatest" %% "scalatest" % "2.0.M5" % "test")
 }
 
 resolvers += "fest release" at "http://repository.codehaus.org"
@@ -47,15 +50,3 @@ pomExtra :=
     </repository>
   </distributionManagement>
 
-sourceGenerators in Compile <+= (sourceManaged, scalaVersion).map{ (dir, sv) =>
-val code = """
-package com.github
-package object okomok{
-  type StaticAnnotation = scala.annotation.StaticAnnotation
-}"""
-  if(sv.startsWith("2.10")){
-    val file = dir / "package.scala"
-    IO.write(file, code )
-    Seq(file)
-  }else Nil
-}
